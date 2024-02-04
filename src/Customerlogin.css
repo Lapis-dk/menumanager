@@ -1,0 +1,102 @@
+/* CustomerLogin.css */
+.main {
+    display: flex;
+    justify-content: center; /* Horizontally center content */
+    align-items: center; /* Vertically center content */
+    height: 100vh; /* Use 100% of the viewport height */
+    margin: 0; /* Remove default margin */
+    background-image: url('chef.jpg'); /* Replace 'your-background-image.jpg' with the path to your image */
+    background-size: cover; /* Cover the entire viewport */
+    background-position: center; /* Center the background image */
+  }
+/* Main container */
+
+.customer-login-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-image: url('cu1.png'); 
+    background-size: cover;
+    background-position: center;/* Light gray background */
+    border-radius: 35px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+ 
+  
+  /* Heading */
+  .customer-login-heading {
+    text-align: center;
+    font-size: 24px;
+    color: rgb(255, 255, 255);
+    margin-bottom: 20px;
+  }
+  
+  /* Input fields */
+  .customer-login-input {
+    width: 95%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 0px solid rgba(255, 255, 255, 0.621);
+    border-radius: 30px;
+    font-size: 16px;
+    background-color: rgba(0, 0, 0, 0.258); /* Black color for the text box */
+    color: rgb(255, 255, 255);
+  }
+  .customer-login-input::placeholder {
+    color: rgba(255, 255, 255, 0.637); /* Light gray color for the placeholder text */
+    opacity: 1; /* Ensure placeholder text is fully visible */
+  }
+  /* Select field */
+  .customer-login-select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 0px solid #ccc;
+    border-radius: 35px;
+    font-size: 16px;
+    background-color: rgba(0, 0, 0, 0.256);
+    color: rgba(255, 255, 255, 0.637); /* White text color for the text inside the select element */
+  }
+  
+
+  /* Login button */
+  .customer-login-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #ff9e2fab; /* Blue */
+    border: none;
+    border-radius: 35px;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .customer-login-button:hover {
+    background-color: #ff9100; /* Darker shade of blue */
+  }
+  
+  /* Error message */
+  .customer-login-error {
+    text-align: center;
+    color: #ff0000; /* Tomato */
+    font-size: 16px;
+    margin-top: 10px;
+  }
+  
+  /* Link for admin */
+  .customer-login-link {
+    color: rgb(255, 255, 255);
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .customer-login-link a {
+    color: rgb(255, 207, 105);
+    text-decoration: none;
+  }
+  
+  .customer-login-link a:hover {
+    text-decoration: underline;
+  }
+  

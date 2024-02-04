@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react'; // 1. Import useRef
 import axios from 'axios';
-import { Tabs, Form, Input, Button, Table, Space, Modal, Switch } from 'antd';
+import { Tabs, Form, Input, Button, Table, Space, Modal, Switch,Row,Col} from 'antd';
 import { DingtalkCircleFilled  } from '@ant-design/icons';
 
 
@@ -11,16 +11,18 @@ const MenuManager = () => {
   const [editTableVisible, setEditTableVisible] = useState(false);
   const [selectedTable, setSelectedTable] = useState(null);
   const [editTableForm] = Form.useForm();
-
+  const [tables, setTables] = useState([]);
+  const [tableForm] = Form.useForm();
   const [menuItems, setMenuItems] = useState([]);
+  const menuItemFormRef = useRef(null);
+
   const [newItem, setNewItem] = useState({
     name: '',
     description: '',
     price: 0,
     image: null,
   });
-  const [tables, setTables] = useState([]);
-  const [tableForm] = Form.useForm();
+
 
   useEffect(() => {
     fetchMenuItems();
@@ -50,18 +52,22 @@ const MenuManager = () => {
     setNewItem((prevItem) => ({
       ...prevItem,
       [name]: name === 'image' ? files[0] : value,
+      //the below line is typed coz i store the value as int in db
+      cookingTime: name === 'cookingTime' ? parseInt(value) : prevItem.cookingTime,
     }));
   };
 
   const handleAddItem = async () => {
     try {
+      console.log(newItem.cookingTime);
+
       // Convert image to base64
       const imageFile = newItem.image;
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64Image = reader.result;
-        const newItemWithImage = { ...newItem, image: base64Image };
-
+        const newItemWithImage = { ...newItem, image: base64Image, cookingTime: newItem.cookingTime };
+  
         // Send the modified newItem to the server
         axios.post('http://localhost:8080/api/menuItems', newItemWithImage)
           .then(() => {
@@ -71,18 +77,21 @@ const MenuManager = () => {
               description: '',
               price: 0,
               image: null,
+              cookingTime: 0, 
             });
+            menuItemFormRef.current.resetFields();
           })
           .catch((error) => {
             console.error('Error adding new item:', error);
           });
       };
-
+  
       reader.readAsDataURL(imageFile);
     } catch (error) {
       console.error('Error adding new item:', error);
     }
   };
+  
 
   const handleDeleteItem = async (itemId) => {
     try {
@@ -156,7 +165,7 @@ const MenuManager = () => {
       onCancel={handleCancelEditTable}
       footer={null}
     >
-      <Form form={editTableForm} onFinish={handleEditTable}>
+      <Form form={editTableForm} onFinish={handleEditTable} >
         <Form.Item label="Table ID" name="id" rules={[{ required: true }]}>
           <Input disabled />
         </Form.Item>
@@ -223,23 +232,44 @@ const MenuManager = () => {
         <TabPane tab="Menu Items" key="1">
           <div className="add-item-form">
             <h3>Add New Item</h3>
-            <Form onFinish={handleAddItem}>
-              <Form.Item label="Name" name="name" rules={[{ required: true }]}>
-                <Input name="name" value={newItem.name} onChange={handleInputChange} />
-              </Form.Item>
-              <Form.Item label="Description" name="description" rules={[{ required: true }]}>
-                <Input.TextArea name="description" value={newItem.description} onChange={handleInputChange} />
-              </Form.Item>
-              <Form.Item label="Price" name="price" rules={[{ required: true }]}>
-                <Input type="number" name="price" value={newItem.price} onChange={handleInputChange} />
-              </Form.Item>
-              <Form.Item label="Image" name="image" rules={[{ required: true }]}>
-                <Input type="file" name="image" accept="image/*" onChange={handleInputChange} />
-              </Form.Item>
-              <Form.Item>
-                <Button type="primary" htmlType="submit">Add Item</Button>
-              </Form.Item>
-            </Form>
+
+            <Form onFinish={handleAddItem}  ref={menuItemFormRef}>
+                <Row gutter={16}>
+                  <Col span={8}>
+                    <Form.Item label="Name" name="name" rules={[{ required: true }]}>
+                      <Input name="name" value={newItem.name} onChange={handleInputChange} />
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item label="Price" name="price" rules={[{ required: true }]}>
+                      <Input type="number" name="price" value={newItem.price} onChange={handleInputChange} />
+                    </Form.Item>
+                  </Col>
+                  <Col span={8}>
+                    <Form.Item label="Cooking Time" name="cookingTime" rules={[{ required: true }]}>
+                      <Input type="number" name="cookingTime" value={newItem.cookingTime} onChange={handleInputChange} />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={24}>
+                    <Form.Item label="Description" name="description" rules={[{ required: true }]}>
+                      <Input.TextArea name="description" value={newItem.description} onChange={handleInputChange} />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={24}>
+                    <Form.Item label="Image" name="image" rules={[{ required: true }]}>
+                      <Input type="file" name="image" accept="image/*" onChange={handleInputChange} />
+                    </Form.Item>
+                  </Col>
+                </Row>
+                <Form.Item>
+                  <Button type="primary" htmlType="submit">Add Item</Button>
+                </Form.Item>
+              </Form>
+
           </div>
 
           <div className="menu-items-list">
@@ -253,7 +283,8 @@ const MenuManager = () => {
                   <div>
                     <h4>{item.name}</h4>
                     <p>{item.description}</p>
-                    <p>${item.price}</p>
+                    <p>Price: ${item.price}</p>
+                    <p>Cooking Time: {item.cookingTime} minutes</p>
                     <Button onClick={() => handleDeleteItem(item.id)}>Delete</Button>
                   </div>
                 </li>

@@ -1,8 +1,8 @@
 // AdminLogin.jsx
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
-const AdminLogin = () => {
+import './Adminlogin.css';
+function AdminLogin() {
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -18,28 +18,31 @@ const AdminLogin = () => {
   };
 
   return (
-    <div>
+    <div className="main">
+    <div className="admin-login-container">
+      <div className="admin-login-heading">
       <h2>Admin Login</h2>
-      <input
+      </div>
+      <input className="admin-login-input"
         type="text"
         placeholder="User ID"
         value={userId}
-        onChange={(e) => setUserId(e.target.value)}
-      />
-      <input
+        onChange={(e) => setUserId(e.target.value)} />
+      <input className="admin-login-input"
         type="password"
         placeholder="Password"
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handleAdminLogin}>Login</button>
-      {error && <p>{error}</p>}
-      <p>
+        onChange={(e) => setPassword(e.target.value)} />
+      <button className="admin-login-button" onClick={handleAdminLogin}>Login</button>
+      {error && <p className="admin-login-error">{error}</p>}
+      <p className="admin-login-link">
         If you are a customer,{" "}
         <Link to="/Customer/login">click here</Link>
       </p>
     </div>
+    </div>
+    
   );
-};
+}
 
 export default AdminLogin;

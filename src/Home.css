@@ -1,0 +1,77 @@
+/* Home.css */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Just+Beauty&display=swap');
+
+.cont {
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+    transition: background-image 0.5s ease, opacity 0.5s ease; /* Add transition for smooth slide and fade effect */
+  }
+  .background1 {
+    background-image: url('background1.png');
+  }
+  
+  .background2 {
+    background-image: url('background2.png');
+  }
+  .background3 {
+    background-image: url('background3.png');
+  }
+  
+  .background4 {
+    background-image: url('background4.png');
+  }
+  header {
+    position: absolute;
+    top: 150px; /* Adjust top position as needed */
+    right: 90px; /* Position header at the top right */
+    color: white;
+  }
+  
+  .hom {
+    font-family: 'Montserrat', sans-serif;
+    text-align:left;
+    font-size:200%;
+    margin-bottom: 20px;
+  }
+  .hom1 {
+    font-family: 'Montserrat', sans-serif;
+    margin-top: -20px;
+    text-align: right;
+    font-size:170%;
+  }
+  
+  .homy {
+    margin-top: 0px;
+    font-family: 'Just Beauty', sans-serif;
+    font-size: 250%;
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  .but {
+    margin-top: -10px;
+    margin-left: 30px;
+  }
+  
+  .butt{
+    display: inline-block;
+    font-family: 'Montserrat', sans-serif;
+    padding: 60px 50px;
+    margin: 0 10px;
+    background-color: #ffffff0a;
+    color: white;
+    text-decoration: none;
+    border: 2px solid white;
+    border-radius:5%;
+    cursor: pointer;
+    font-size: 1em;
+  }
+  
+  .butt:hover {
+    background-color: #00000061;
+  }
+  
