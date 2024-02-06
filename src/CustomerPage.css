@@ -1,18 +1,41 @@
 /* CustomerPage.css */
 
+/* Set a background image for the entire page */
+.customer-page {
+  background-image: url('cbackground.png');
+  background-size: cover; /* Cover the entire viewport */
+  background-position: center; /* Center the background image */
+  min-height: 100vh; /* Ensure the background covers the entire viewport height */
+  padding: 40px; /* Add padding to the page content */
+}
+h2 {
+  color: white;
+}
 .menu-item {
   display: flex;
+  color: white;
   align-items: flex-start;
   margin-bottom: 20px;
+  background-color: rgba(0, 0, 0, 0.199); /* Add a semi-transparent background to each menu item */
+  padding: 20px; /* Add padding to each menu item */
+  border-radius: 10px; /* Add rounded corners */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow for depth */
 }
 
 .menu-image {
-  width: 350px; /* Set a fixed width for the image */
-  height: 250px; /* Set a fixed height for the image */
-  object-fit: cover; /* Maintain aspect ratio and cover the container */
+  width: 250px; /* Reduce the width of the image */
+  height: 150px; /* Reduce the height of the image */
+  border-radius: 5px; /* Add rounded corners to the image */
   margin-right: 20px;
 }
 
+.img {
+  width: 250px; /* Reduce the width of the image */
+  height: 150px; /* Reduce the height of the image */
+  object-fit:fill;
+  border-radius: 5px; /* Add rounded corners to the image */
+  margin-right: 20px;
+}
 .item-details {
   flex: 1;
 }
@@ -21,4 +44,42 @@
 .item-details p,
 .item-details button {
   margin: 0;
+}
+.box{
+  margin-top: 2%;
+}
+.item-details button {
+  right: -1%;
+  background-color: #1890ff; /* Set a primary color for the button */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Add a smooth transition on hover */
+}
+
+.item-details button:hover {
+  background-color: #40a9ff; /* Darken the button color on hover */
+}
+.cart-container {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Style the Confirm Order button */
+.confirm-order-button {
+  background-color: #1890ff;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.confirm-order-button:hover {
+  background-color: #40a9ff;
 }

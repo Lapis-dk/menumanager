@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './CustomerPage.css';
 import axios from 'axios';
+import { message } from 'antd';
 import { Tabs, Modal, Result, Button, Table, InputNumber } from 'antd';
 import { SmileOutlined } from '@ant-design/icons';
 
@@ -13,6 +14,8 @@ const CustomerPage = () => {
   const phoneNo = location.state.phoneNo;
 
   const [menuItems, setMenuItems] = useState([]);
+  const [selectedMenuItem, setSelectedMenuItem] = useState(null);
+  const [selectedQuantity, setSelectedQuantity] = useState(1);
   const [cart, setCart] = useState([]);
   const [confirmation, setConfirmation] = useState("");
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
@@ -21,7 +24,11 @@ const CustomerPage = () => {
   const [editQuantity, setEditQuantity] = useState(0);
   const navigate = useNavigate();
   const [averageCookingTime, setAverageCookingTime] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0); // Add totalPrice state
 
+  const generateUniqueId = useCallback((itemId) => {
+    return `${itemId}_${Math.random().toString(36).substr(2, 9)}`;
+  }, []);
 
   useEffect(() => {
     const fetchMenuItems = async () => {
@@ -36,62 +43,62 @@ const CustomerPage = () => {
     fetchMenuItems();
   }, []);
 
-  const handleAddToCart = async (itemId) => {
-    try {
-      const response = await axios.get(`http://localhost:8080/api/menuItems/${itemId}`);
-      const selectedItem = response.data;
-
-      const existingCartItemIndex = cart.findIndex(item => item.id === selectedItem.id);
-
+  useEffect(() => {
+    if (selectedMenuItem) {
+      const existingCartItemIndex = cart.findIndex(item => item.id === selectedMenuItem.id);
+  
       if (existingCartItemIndex !== -1) {
         const updatedCart = [...cart];
-        updatedCart[existingCartItemIndex].quantity += 1;
+        updatedCart[existingCartItemIndex].quantity += selectedQuantity;
         setCart(updatedCart);
       } else {
         const cartItem = {
-          ...selectedItem,
-          cartId: generateUniqueId(selectedItem.id),
-          quantity: 1,
+          ...selectedMenuItem,
+          cartId: generateUniqueId(selectedMenuItem.id),
+          quantity: selectedQuantity,
         };
         setCart(prevCart => [...prevCart, cartItem]);
       }
-    } catch (error) {
-      console.error('Error adding to cart:', error);
+  
+      // Reset selectedMenuItem and selectedQuantity after adding to cart
+      setSelectedMenuItem(null);
+      setSelectedQuantity(1);
+      
+      // Display a message indicating the item has been added to the cart
+      message.success(`${selectedQuantity} ${selectedMenuItem.name}(s) added to cart`);
     }
-  };
+  }, [cart, generateUniqueId, selectedMenuItem, selectedQuantity]);
 
-  const generateUniqueId = (itemId) => {
-    return `${itemId}_${Math.random().toString(36).substr(2, 9)}`;
-  };
-
-  const handleRemoveFromCart = (cartId) => {
+  const handleRemoveFromCart = useCallback((cartId) => {
     const updatedCart = cart.filter((item) => item.cartId !== cartId);
     setCart(updatedCart);
-  };
+  }, [cart]);
 
-  const handleEditButtonClick = (item) => {
+  const handleEditButtonClick = useCallback((item) => {
     setEditItem(item);
     setEditQuantity(item.quantity);
     setEditModalVisible(true);
-  };
+  }, []);
 
-  const handleEditItem = () => {
+  const handleEditItem = useCallback(() => {
     const updatedCart = [...cart];
     const index = updatedCart.findIndex(item => item.cartId === editItem.cartId);
     updatedCart[index].quantity = editQuantity;
     setCart(updatedCart);
     setEditModalVisible(false);
-  };
+  }, [cart, editItem, editQuantity]);
 
-  const handleEditModalClose = () => {
+  const handleEditModalClose = useCallback(() => {
     setEditModalVisible(false);
-  };
+  }, []);
 
-  const handleConfirmOrder = async () => {
+  const handleConfirmOrder = useCallback(async () => {
     try {
       const totalCookingTime = calculateTotalTime();
       const averageCookingTime = totalCookingTime / cart.length;
-
+  
+      const totalOrderPrice = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+  
       const dataToUpdate = {
         orderedMenuItems: cart.map(item => item.name),
         phoneNumber: phoneNo,
@@ -100,26 +107,24 @@ const CustomerPage = () => {
       };
   
       await axios.put(`http://localhost:8080/api/tables/${selectedTable}`, dataToUpdate);
-      setCart([]);//to amke the cart empty when order confirmed
+      
       setConfirmation("Order confirmed!");
       setShowConfirmationModal(true); 
       setAverageCookingTime(averageCookingTime);
-
+      setTotalPrice(totalOrderPrice); 
+      setCart([]); 
+  
     } catch (error) {
       console.error('Error confirming order:', error);
     }
-  };
+  }, [cart, phoneNo, selectedTable]);
   
-  const calculateTotal = () => {
-    return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-  };
-  
-  const calculateTotalTime = () => {
+  const calculateTotalTime = useCallback(() => {
     const totalQuantity = cart.reduce((total, item) => total + item.quantity, 0);
     const totalCookingTime = cart.reduce((total, item) => total + (item.cookingTime * item.quantity), 0);
     const averageCookingTime = totalCookingTime / totalQuantity;
     return averageCookingTime.toFixed(0); 
-  };
+  }, [cart]);
 
   const columns = [
     {
@@ -157,13 +162,13 @@ const CustomerPage = () => {
     },
   ];
 
-  const handleModalClose = () => {
+  const handleModalClose = useCallback(() => {
     setShowConfirmationModal(false);
-  };
+  }, []);
 
-  const goToHomePage = () => {
+  const goToHomePage = useCallback(() => {
     navigate("/");
-  };
+  }, [navigate]);
 
   return (
     <div className="customer-page">
@@ -174,13 +179,14 @@ const CustomerPage = () => {
             {menuItems.map((item) => (
               <li key={item.id} className="menu-item">
                 <div className="menu-image">
-                  <img src={item.image} alt={item.name} />
+                  <img className="img" src={item.image} alt={item.name} />
                 </div>
                 <div className="item-details">
                   <h4>{item.name}</h4>
                   <p>{item.description}</p>
                   <p>${item.price}</p>
-                  <button onClick={() => handleAddToCart(item.id)}>Add to Cart</button>
+                  <InputNumber className='box' min={1} defaultValue={1} onChange={(value) => setSelectedQuantity(value)} />
+                  <Button onClick={() => { setSelectedMenuItem(item); }}>Add to Cart</Button>
                 </div>
               </li>
             ))}
@@ -224,7 +230,7 @@ const CustomerPage = () => {
                   subTitle={`Phone number: ${phoneNo} Table number: ${selectedTable}`}
                   icon={<SmileOutlined />}
                 />
-                <p>Total Price: ${cart.reduce((total, item) => total + (item.price * item.quantity), 0)}</p>
+                <p>Total Price: ${totalPrice}</p>
                 <p>Average Cooking Time: {Math.round(averageCookingTime)} mins</p>
               </Modal>
             )}

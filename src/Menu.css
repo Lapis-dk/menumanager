@@ -1,0 +1,105 @@
+/* MenuManager.css */
+
+.menu-manager-page {
+    color: white; /* Set the default text color to white */
+    background-image: url('abackground.png');
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    padding: 40px;
+  }
+  
+  .add-item-form,
+  .add-table-form {
+    background-color: rgba(255, 255, 255, 0.504);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    color: black;
+  }
+  
+  .menu-items-list,
+  .tables-list {
+    font-size: 18px; /* Increase the font size for list headings */
+    color: white;
+    background-color: rgba(0, 0, 0,0.314);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .menu-items-list h3,
+  .tables-list h3 { /* Increase the font size for list headings */
+    margin-bottom: 10px;
+  }
+  
+  .menu-items-list ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .menu-items-list li {
+    display: flex;
+    margin-bottom: 20px;
+  }
+  
+  .menu-items-list li div:first-child {
+    margin-right: 20px;
+  }
+  
+  .menu-items-list img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover; /* Ensure the image fits within the container */
+    border-radius: 5px;
+  }
+  
+  .tables-list table {
+    width: 100%;
+  }
+  
+  .menu-items-list button,
+  .tables-list button {
+    background-color: #f5222d;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .menu-items-list button:hover,
+  .tables-list button:hover {
+    background-color: #ff4d4f;
+  }
+  
+  .add-item-form input,
+  .add-table-form input,
+  .add-table-form button,
+  .add-item-form button {
+    width: 100%;
+  }
+  
+  .add-table-form .ant-switch {
+    margin-top: 8px;
+  }
+  
+  .ant-modal-content {
+    border-radius: 10px;
+  }
+  
+  .ant-modal-footer {
+    border-top: none;
+  }
+  
+  .ant-table-action-column a {
+    color: #ff186d;
+    cursor: pointer;
+  }
+  
+  .ant-table-action-column a:hover {
+    text-decoration: underline;
+  }
+  
